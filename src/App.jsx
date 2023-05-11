@@ -19,6 +19,7 @@ function App() {
     console.log(e.target.item.value)
     setItems([...items, { id: nanoid(), checked: false, name:e.target.item.value }])
     toast.success(`Item Added Successfully!`)
+    e.target.item.value = ''
   }
 
   const removeItem = ({ id }) => {
