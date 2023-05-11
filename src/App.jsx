@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import './App.css'
@@ -7,8 +7,18 @@ import { SingleItem } from './SingleItem'
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
+const getLocalStorage = (key) => {
+  const items = localStorage.getItem(key)
+  if(items) return JSON.parse(items)
+  else return []
+}
+
+const setLocalStorage = (key, value) => {
+  localStorage.setItem(key, JSON.stringify(value))
+}
+
 function App() {
-  const [items, setItems] = useState([])
+  const [items, setItems] = useState(getLocalStorage(`list`))
 
   const addItem = (e) => {
     e.preventDefault()
@@ -16,8 +26,9 @@ function App() {
       toast.error(`Cannot add empty value!`)
       return
     }
-    console.log(e.target.item.value)
-    setItems([...items, { id: nanoid(), checked: false, name:e.target.item.value }])
+    const newItems = [...items, { id: nanoid(), checked: false, name:e.target.item.value }]
+    setItems(newItems)
+    setLocalStorage(`list`, newItems)
     toast.success(`Item Added Successfully!`)
     e.target.item.value = ''
   }
